@@ -1,5 +1,6 @@
 package com.cuntou.滑动窗口;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,14 +45,45 @@ public class _30_substring_with_concatenation_of_all_words {
      */
     //找到子串的长度
 
-    //哈希查找
-    public List<Integer> findSubString1 (String s, String[] words) {
+    public List<Integer> findSubstring(String s, String[] words) {
         //统计每个单词出现的次数
-        Map<String, Integer> map = new HashMap<>();
+        Map<String,Integer> map = new HashMap<>();
         for (String word : words) {
             map.put(word, map.getOrDefault(word,0) + 1);
         }
 
 
+        int oneWordLen = words[0].length();
+        int wordNum = words.length;
+
+        List<Integer> res = new ArrayList<>();
+        //每个窗口的大小就是使用的这个
+        for (int i = 0; i < oneWordLen  ; i++) {
+            int left = i, right = i;
+            int matchedWords = 0;
+            Map<String,Integer> windowMap = new HashMap<>();
+            //如果后面还有一个单词的长度的话就需要进行处理，不然是不需要进行处理的
+            while (right <= s.length() - oneWordLen) {
+                String currWord = s.substring(right, right + oneWordLen);
+                windowMap.put(currWord, windowMap.getOrDefault(currWord,0) + 1);
+                matchedWords++;
+                //如果Map大于之前次数的话
+                while (windowMap.getOrDefault(currWord, 0)
+                       > map.getOrDefault(currWord,0)) {
+                    String leftWord = s.substring(left,left + oneWordLen);
+                    //剔除之后有可能在这个map中他依然还是多
+                    windowMap.put(leftWord,windowMap.getOrDefault(leftWord,0) - 1);
+                    left += oneWordLen;
+                    matchedWords--;
+                }
+                //怎么确定匹配的单词的个数是我们想要的
+                if (matchedWords == wordNum) res.add(left);
+                right += oneWordLen;
+            }
+
+        }
+        return res;
     }
+
+    //
 }

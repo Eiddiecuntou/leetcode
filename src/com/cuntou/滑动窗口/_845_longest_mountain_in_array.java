@@ -35,6 +35,35 @@ public class _845_longest_mountain_in_array {
     0 <= A[i] <= 10000
 
      */
+    //山脉的先增先后下降的
+    //把他转换成更多的这个
+    public int longestMountain(int[] arr) {
+        int n = arr.length;
+        int ans = 0;
+        int left = 0;
+        while (left + 2 < n) {
+            //找到最高点
+            int right = left + 1;
+            if(arr[left] < arr[right]) {
+                //找到最高点
+                while (right + 1 < n && arr[right] < arr[right + 1]) {
+                    right++;
+                }
+                if (right + 1 < n && arr[right] > arr[right + 1]) {
+                    //找到最低点
+                    while (right + 1 < n && arr[right] > arr[right + 1] ) {
+                        right++;
+                    }
+                } else {
+                    //没有最低点就开始继续增加，说明没有，把所有的数组都遍历完。
+                    right++;
+                }
+
+            }
+            left = right;
+        }
+        return ans;
+    }
 
 
 }
